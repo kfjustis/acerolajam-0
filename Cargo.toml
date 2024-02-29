@@ -1,0 +1,10 @@
+[package]
+name = "acerolajam-0"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bevy = "0.13.0"
+bevy-inspector-egui = "0.23.2"
+bevy_tweening = "0.10.0"
+bevy_xpbd_3d = "0.4.2"
