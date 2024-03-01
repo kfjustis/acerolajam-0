@@ -12,8 +12,19 @@ opt-level = 1
 opt-level = 3
 
 
+[dependencies.bevy]
+version = "0.13.0"
+default-features = false
+
+[target.'cfg(not(target_os = "web"))'.dependencies.bevy]
+version = "0.13.0"
+features = ["default", "dynamic_linking"]
+
+[target.'cfg(target_os = "web")'.dependencies.bevy]
+version = "0.13.0"
+features = ["default"]
+
 [dependencies]
-bevy = {version = "0.13.0", features = ["dynamic_linking"]}
 bevy-inspector-egui = "0.23.2"
 bevy_tweening = "0.10.0"
 bevy_xpbd_3d = "0.4.2"

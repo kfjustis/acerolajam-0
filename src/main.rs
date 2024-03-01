@@ -1,3 +1,9 @@
+use bevy::prelude::*;
+
+mod states;
+
 fn main() {
-    println!("Hello, world!");
+    App::new()
+        .add_plugins(states::init::InitStatePlugin)
+        .run()
 }
