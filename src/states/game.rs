@@ -1,4 +1,8 @@
 use bevy::prelude::*;
+use smooth_bevy_cameras::{
+    controllers::fps::{FpsCameraBundle, FpsCameraController, FpsCameraPlugin},
+    LookTransformPlugin,
+};
 
 use crate::states::AppState;
 
@@ -6,6 +10,8 @@ pub struct GameStatePlugin;
 
 impl Plugin for GameStatePlugin {
     fn build(&self, app: &mut App) {
+        app.add_plugins(LookTransformPlugin);
+        app.add_plugins(FpsCameraPlugin::default());
         app.add_systems(OnEnter(AppState::Game), init_game);
         //app.add_systems(OnEnter(AppState::Game), load_level);
     }
@@ -16,12 +22,6 @@ fn init_game(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    // Spawn camera.
-    commands.spawn(Camera3dBundle {
-        transform: Transform::from_xyz(-2.5, 4.5, 9.0). looking_at(Vec3::ZERO, Vec3::Y),
-        ..default()
-    });
-
     // Spawn light.
     commands.spawn(PointLightBundle {
         point_light: PointLight {
@@ -39,6 +39,15 @@ fn init_game(
         transform: Transform::from_xyz(0.0, 0.5, 0.0),
         ..default()
     });
+
+    // Spawn player cam.
+    commands.spawn(Camera3dBundle::default())
+        .insert(FpsCameraBundle::new(
+            FpsCameraController::default(),
+            Vec3::new(-2.0, 5.0, 5.0),
+            Vec3::new(0., 0., 0.),
+            Vec3::Y,
+        ));
 }
 
 // If space_editor magically updates to 0.13 before the end of the jam, bring
