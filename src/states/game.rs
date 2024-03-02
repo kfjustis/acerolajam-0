@@ -1,4 +1,9 @@
-use bevy::{prelude::*, window::{CursorGrabMode, PrimaryWindow}};
+use bevy::{
+    asset::LoadState,
+    core_pipeline::Skybox, prelude::*, render::{
+        render_resource::{TextureViewDescriptor, TextureViewDimension},
+    }, window::{CursorGrabMode, PrimaryWindow}
+};
 use smooth_bevy_cameras::{
     controllers::fps::{FpsCameraBundle, FpsCameraController, FpsCameraPlugin},
     LookTransformPlugin,
@@ -8,13 +13,18 @@ use crate::states::AppState;
 
 pub struct GameStatePlugin;
 
+#[derive(Component)]
+struct PlayerCam;
+
 impl Plugin for GameStatePlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(LookTransformPlugin);
         app.add_plugins(FpsCameraPlugin::default());
         app.add_systems(OnEnter(AppState::Game), (
             init_cursor,
-            init_game));
+            init_game
+        ));
+        app.add_systems(Update, configure_skybox);
     }
 }
 
@@ -32,6 +42,7 @@ fn init_game(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
+    asset_server: Res<AssetServer>,
 ) {
     // Spawn light.
     commands.spawn(PointLightBundle {
@@ -53,19 +64,54 @@ fn init_game(
         ..default()
     });
 
-    // Spawn player cam.
+    // Spawn player cam with skybox.
+    let skybox_handle = asset_server.load("textures/cubemap_nightskycolor_512.png");
     commands.spawn(Camera3dBundle::default())
-        .insert(FpsCameraBundle::new(
-            FpsCameraController {
-                enabled: true,
-                translate_sensitivity: 20., // TODO Set to 0. after adding player physics.
-                mouse_rotate_sensitivity: Vec2::splat(0.14),
-                smoothing_weight: 0.45,
+        .insert(
+            FpsCameraBundle::new(
+                FpsCameraController {
+                    enabled: true,
+                    translate_sensitivity: 20., // TODO Set to 0. after adding player physics.
+                    mouse_rotate_sensitivity: Vec2::splat(0.14),
+                    smoothing_weight: 0.45,
+                },
+                Vec3::new(0.0, 5., -25.), // Position (eye)
+                Vec3::new(0., 5., 0.),    // Target (look)
+                Vec3::Y,
+            )
+        )
+        .insert(PlayerCam)
+        .insert(Skybox {
+            image: skybox_handle.clone(),
+            brightness: 150.0,
+        });
+}
+
+fn configure_skybox(
+    asset_server: Res<AssetServer>,
+    mut images: ResMut<Assets<Image>>,
+    mut skyboxes: Query<&mut Skybox>,
+) {
+    for skybox in skyboxes.iter_mut() {
+        if asset_server.load_state(&skybox.image) != LoadState::Loaded {
+            continue;
+        }
+        let image_handle = images.get_mut(&skybox.image);
+        match image_handle {
+            Some(x) => {
+                // PNGs do not contain metadata to indicate they contain a cubemap
+                // texture, so manually configure their texture data here.
+                if x.texture_descriptor.array_layer_count() == 1 {
+                    x.reinterpret_stacked_2d_as_array(x.height() / x.width());
+                    x.texture_view_descriptor = Some(TextureViewDescriptor {
+                        dimension: Some(TextureViewDimension::Cube),
+                        ..default()
+                    });
+                }
             },
-            Vec3::new(0.0, 5., -25.), // Position (eye)
-            Vec3::new(0., 5., 0.),    // Target (look)
-            Vec3::Y,
-        ));
+            None => { return; }
+        }
+    }
 }
 
 // If space_editor magically updates to 0.13 before the end of the jam, bring
