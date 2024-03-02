@@ -48,7 +48,7 @@ fn init_game(
     // Spawn floor.
     commands.spawn(PbrBundle {
         mesh: meshes.add(Cuboid::new(50.0, 1.0, 50.0)),
-        material: materials.add(Color::rgb_u8(124, 144, 255)),
+        material: materials.add(Color::rgb_u8(63, 33, 150)),
         transform: Transform::from_xyz(0.0, 0.5, 0.0),
         ..default()
     });
@@ -62,8 +62,8 @@ fn init_game(
                 mouse_rotate_sensitivity: Vec2::splat(0.14),
                 smoothing_weight: 0.45,
             },
-            Vec3::new(-2.0, 5.0, 5.0),
-            Vec3::new(0., 0., 0.),
+            Vec3::new(0.0, 5., -25.), // Position (eye)
+            Vec3::new(0., 5., 0.),    // Target (look)
             Vec3::Y,
         ));
 }
