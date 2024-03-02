@@ -1,0 +1,155 @@
+(
+  resources: {},
+  entities: {
+    8: (
+      components: {
+        "bevy_transform::components::transform::Transform": (
+          translation: (
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+          ),
+          rotation: (
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+            w: 1.0,
+          ),
+          scale: (
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+          ),
+        ),
+        "bevy_core::name::Name": (
+          hash: 14240628584996366763,
+          name: "Floor",
+        ),
+        "bevy_render::view::visibility::Visibility": Inherited,
+        "space_prefab::component::material::MaterialPrefab": (
+          base_color: Rgba(
+            red: 0.2,
+            green: 0.105882354,
+            blue: 0.105882354,
+            alpha: 1.0,
+          ),
+          base_color_texture: "",
+          emissive: Rgba(
+            red: 0.0,
+            green: 0.0,
+            blue: 0.0,
+            alpha: 1.0,
+          ),
+          emissive_texture: "",
+          perceptual_roughness: 0.5,
+          metallic: 0.0,
+          metallic_roughness_texture: "",
+          reflectance: 0.5,
+          normal_map_texture: "",
+          flip_normal_map_y: false,
+          occlusion_texture: "",
+          double_sided: false,
+          unlit: false,
+          fog_enabled: true,
+          alpha_mode: Opaque,
+          depth_bias: 0.0,
+          depth_map: "",
+          parallax_depth_scale: 0.1,
+          parallax_mapping_method: Occlusion,
+          max_parallax_layer_count: 16.0,
+        ),
+        "space_prefab::component::shape::MeshPrimitivePrefab": Box((
+          w: 1.0,
+          h: 1.0,
+          d: 1.0,
+        )),
+      },
+    ),
+    9: (
+      components: {
+        "bevy_transform::components::transform::Transform": (
+          translation: (
+            x: 1.1848156,
+            y: 1.574957,
+            z: 0.0,
+          ),
+          rotation: (
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+            w: 1.0,
+          ),
+          scale: (
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+          ),
+        ),
+        "bevy_core::name::Name": (
+          hash: 14240628584996366763,
+          name: "Light",
+        ),
+        "bevy_render::view::visibility::Visibility": Inherited,
+        "bevy_pbr::light::PointLight": (
+          color: Rgba(
+            red: 1.0,
+            green: 1.0,
+            blue: 1.0,
+            alpha: 1.0,
+          ),
+          intensity: 800.0,
+          range: 20.0,
+          radius: 0.0,
+          shadows_enabled: false,
+          shadow_depth_bias: 0.02,
+          shadow_normal_bias: 0.6,
+        ),
+        "space_prefab::save::ChildrenPrefab": ([
+          10,
+        ]),
+      },
+    ),
+    12: (
+      components: {
+        "bevy_transform::components::transform::Transform": (
+          translation: (
+            x: 0.0,
+            y: 1.2641947,
+            z: 7.170591,
+          ),
+          rotation: (
+            x: -0.059697457,
+            y: 0.0,
+            z: 0.0,
+            w: 0.9982165,
+          ),
+          scale: (
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+          ),
+        ),
+        "bevy_render::camera::camera::Camera": (
+          viewport: None,
+          order: 0,
+          is_active: false,
+          hdr: false,
+          msaa_writeback: true,
+        ),
+        "bevy_core_pipeline::core_3d::camera_3d::Camera3d": (
+          clear_color: Default,
+          depth_load_op: Clear(0.0),
+          depth_texture_usages: (16),
+          screen_space_specular_transmission_steps: 1,
+          screen_space_specular_transmission_quality: Medium,
+        ),
+        "bevy_render::camera::projection::Projection": Perspective((
+          fov: 0.7853982,
+          aspect_ratio: 1.7777778,
+          near: 0.1,
+          far: 1000.0,
+        )),
+      },
+    ),
+  },
+)
