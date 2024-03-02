@@ -1,4 +1,4 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, window::{CursorGrabMode, PrimaryWindow}};
 use smooth_bevy_cameras::{
     controllers::fps::{FpsCameraBundle, FpsCameraController, FpsCameraPlugin},
     LookTransformPlugin,
@@ -12,9 +12,20 @@ impl Plugin for GameStatePlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(LookTransformPlugin);
         app.add_plugins(FpsCameraPlugin::default());
-        app.add_systems(OnEnter(AppState::Game), init_game);
-        //app.add_systems(OnEnter(AppState::Game), load_level);
+        app.add_systems(OnEnter(AppState::Game), (
+            init_cursor,
+            init_game));
     }
+}
+
+fn init_cursor(
+    mut windows: Query<&mut Window, With<PrimaryWindow>>,
+) {
+    let mut primary_window = windows.single_mut();
+
+    // Lock and hide the cursor.
+    primary_window.cursor.grab_mode = CursorGrabMode::Locked;
+    primary_window.cursor.visible = false;
 }
 
 fn init_game(
@@ -26,6 +37,8 @@ fn init_game(
     commands.spawn(PointLightBundle {
         point_light: PointLight {
             shadows_enabled: true,
+            intensity: 1_000_000.0 * 10.0,
+            range: 100.0,
             ..default()
         },
         transform: Transform::from_xyz(0.0, 8.0, 0.0),
@@ -43,7 +56,12 @@ fn init_game(
     // Spawn player cam.
     commands.spawn(Camera3dBundle::default())
         .insert(FpsCameraBundle::new(
-            FpsCameraController::default(),
+            FpsCameraController {
+                enabled: true,
+                translate_sensitivity: 20., // TODO Set to 0. after adding player physics.
+                mouse_rotate_sensitivity: Vec2::splat(0.14),
+                smoothing_weight: 0.45,
+            },
             Vec3::new(-2.0, 5.0, 5.0),
             Vec3::new(0., 0., 0.),
             Vec3::Y,
@@ -53,6 +71,7 @@ fn init_game(
 // If space_editor magically updates to 0.13 before the end of the jam, bring
 // this back.
 //
+// //app.add_systems(OnEnter(AppState::Game), load_level);
 // const TEST_LEVEL_PATH: &str = "./maps/KFTOONS_testing.scn.ron";
 // fn load_level(
 //     mut commands: Commands, asset_server: Res<AssetServer>
