@@ -28,6 +28,7 @@ features = ["default", "webgl2"]
 
 [dependencies]
 bevy-inspector-egui = "0.23.2"
+bevy_mod_billboard = {git = "https://github.com/kulkalkul/bevy_mod_billboard.git", branch = "main", commit = "1fabd2214731dedb4b17ce0a0894d22182707759"}
 bevy_tweening = "0.10.0"
 bevy_xpbd_3d = "0.4.2"
 smooth-bevy-cameras = "0.11.0"
